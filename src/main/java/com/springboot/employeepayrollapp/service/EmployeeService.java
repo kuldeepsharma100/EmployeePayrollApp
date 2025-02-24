@@ -1,11 +1,13 @@
 package com.springboot.employeepayrollapp.service;
 
+import com.springboot.employeepayrollapp.dto.EmployeeDTO;
 import com.springboot.employeepayrollapp.model.Employee;
 import com.springboot.employeepayrollapp.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -33,5 +35,26 @@ public class EmployeeService {
     }
     public void deleteEmployee(Long id) {
         repository.deleteById(id);
+    }
+
+
+    //uc3
+
+
+    public EmployeeDTO saveEmployeeDTO(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee(employeeDTO.getName1(), employeeDTO.getSalary1());
+
+        Employee savedEmployee = repository.save(employee);
+
+        // Now this will work because EmployeeDTO has a matching constructor
+        return new EmployeeDTO(savedEmployee.getName(), savedEmployee.getSalary());
+    }
+
+
+
+    public List<EmployeeDTO> getAllEmployeesDTO() {
+        return repository.findAll().stream()
+                .map(emp -> new EmployeeDTO(emp.getName(), emp.getSalary()))
+                .collect(Collectors.toList());
     }
 }
