@@ -22,6 +22,15 @@ public class Employee {
     @Min(value = 10000, message = "Salary must be at least 10000")
     private double salary;
 
+
+    // Constructors
+    public Employee() {}
+
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;

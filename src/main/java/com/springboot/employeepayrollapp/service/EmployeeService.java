@@ -24,7 +24,13 @@ public class EmployeeService {
     public Employee saveEmployee(Employee employee) {
         return repository.save(employee);
     }
-
+    // Update existing employee
+    public Employee updateEmployee(Long id, Employee employeeDetails) {
+        Employee employee = repository.findById(id).orElseThrow();
+        employee.setName(employeeDetails.getName());
+        employee.setSalary(employeeDetails.getSalary());
+        return repository.save(employee);
+    }
     public void deleteEmployee(Long id) {
         repository.deleteById(id);
     }

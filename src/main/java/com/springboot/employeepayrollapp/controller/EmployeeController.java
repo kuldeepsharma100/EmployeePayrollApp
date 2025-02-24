@@ -16,7 +16,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
-    // Get all employees
+    // Get all employees uc1
     @GetMapping
     public List<Employee> getAllEmployees() {
         return service.getAllEmployees();
@@ -36,6 +36,13 @@ public class EmployeeController {
         Employee savedEmployee = service.saveEmployee(employee);
         System.out.println("Saved Employee: " + savedEmployee); // Debugging
         return savedEmployee;
+    }
+
+
+    // Update an employee uc2
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+        return service.updateEmployee(id, employeeDetails);
     }
 
     // Delete an employee by ID
