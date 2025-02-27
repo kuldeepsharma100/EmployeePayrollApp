@@ -1,6 +1,7 @@
 package com.springboot.employeepayrollapp.service;
 
 import com.springboot.employeepayrollapp.dto.EmployeePayrollDTO;
+import com.springboot.employeepayrollapp.exception.EmployeeNotFoundException;
 import com.springboot.employeepayrollapp.model.EmployeePayroll;
 import com.springboot.employeepayrollapp.repository.EmployeePayrollRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-@Slf4j
 @Service
 public class EmployeePayrollService {
 
@@ -21,43 +21,33 @@ public class EmployeePayrollService {
     private EmployeePayrollRepository employeePayrollRepository;
 
     public List<EmployeePayroll> getAllEmployees() {
-        log.info("Fetching all employees.");
         return employeePayrollRepository.findAll();
     }
 
     public EmployeePayroll getEmployeeById(int id) {
-        log.info("Fetching employee with ID: {}", id);
-        return employeePayrollRepository.findById(id).orElse(null);
+        return employeePayrollRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
+    }
+
+    public EmployeePayroll updateEmployee(int id, EmployeePayrollDTO dto) {
+        EmployeePayroll employee = employeePayrollRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
+        employee.setName(dto.getName());
+        employee.setSalary(dto.getSalary());
+        return employeePayrollRepository.save(employee);
+    }
+
+    public String deleteEmployee(int id) {
+        if (!employeePayrollRepository.existsById(id)) {
+            throw new EmployeeNotFoundException("Employee with ID " + id + " not found.");
+        }
+        employeePayrollRepository.deleteById(id);
+        return "Employee with ID " + id + " deleted.";
     }
 
     public EmployeePayroll createEmployee(EmployeePayrollDTO dto) {
         EmployeePayroll employee = new EmployeePayroll(dto);
-        EmployeePayroll savedEmployee = employeePayrollRepository.save(employee);
-        log.info("Created Employee: {}", savedEmployee);
-        return savedEmployee;
+        return employeePayrollRepository.save(employee);
     }
 
-    public EmployeePayroll updateEmployee(int id, EmployeePayrollDTO dto) {
-        Optional<EmployeePayroll> existingEmployee = employeePayrollRepository.findById(id);
-        if (existingEmployee.isPresent()) {
-            EmployeePayroll employee = existingEmployee.get();
-            employee.setName(dto.getName());
-            employee.setSalary(dto.getSalary());
-            EmployeePayroll updatedEmployee = employeePayrollRepository.save(employee);
-            log.info("Updated Employee: {}", updatedEmployee);
-            return updatedEmployee;
-        }
-        log.warn("Employee with ID {} not found for update.", id);
-        return null;
-    }
-
-    public String deleteEmployee(int id) {
-        if (employeePayrollRepository.existsById(id)) {
-            employeePayrollRepository.deleteById(id);
-            log.info("Deleted Employee with ID: {}", id);
-            return "Employee with ID " + id + " deleted.";
-        }
-        log.warn("Employee with ID {} not found for deletion.", id);
-        return "Employee not found.";
-    }
 }
