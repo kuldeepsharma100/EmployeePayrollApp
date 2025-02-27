@@ -6,7 +6,8 @@ import com.springboot.employeepayrollapp.service.EmployeePayrollService;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employeepayrollservice")
@@ -20,6 +21,11 @@ public class EmployeePayrollController {
         return "Welcome to Employee Payroll Service!";
     }
 
+    @GetMapping("/getAll")
+    public List<EmployeePayroll> getAllEmployees() {
+        return employeePayrollService.getAllEmployees();
+    }
+
     @GetMapping("/get/{id}")
     public EmployeePayroll getEmployeeById(@PathVariable int id) {
         return employeePayrollService.getEmployeeById(id);
@@ -30,9 +36,9 @@ public class EmployeePayrollController {
         return employeePayrollService.createEmployee(dto);
     }
 
-    @PutMapping("/update")
-    public EmployeePayroll updateEmployee(@RequestBody EmployeePayrollDTO dto) {
-        return employeePayrollService.updateEmployee(dto);
+    @PutMapping("/update/{id}")
+    public EmployeePayroll updateEmployee(@PathVariable int id, @RequestBody EmployeePayrollDTO dto) {
+        return employeePayrollService.updateEmployee(id, dto);
     }
 
     @DeleteMapping("/delete/{id}")
