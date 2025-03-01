@@ -1,7 +1,6 @@
 package com.springboot.employeepayrollapp.service;
 
 import com.springboot.employeepayrollapp.dto.EmployeePayrollDTO;
-import com.springboot.employeepayrollapp.exception.EmployeeNotFoundException;
 import com.springboot.employeepayrollapp.model.EmployeePayroll;
 import com.springboot.employeepayrollapp.repository.EmployeePayrollRepository;
 import lombok.extern.slf4j.Slf4j;
